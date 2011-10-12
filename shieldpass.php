@@ -3,7 +3,7 @@
 Plugin Name: Shieldpass two-factor authentication
 Plugin URI: https://www.shieldpass.com/wordpress.html
 Description: This plugin adds shieldpass two-factor authentication to the Wordpress login page. Once activated you must go to Users > Shieldpass Configuration and configure a wordpress username to a shieldpass user id from your https://www.shieldpass.com account. You will also need to enter your public and secret key which can also be found in your shieldpass.com account page.
-Version: 2.0
+Version: 2.1
 Author: Matthias Kebeck
 Author URI: https://www.shieldpass.com/about.html
 License: GPL2
