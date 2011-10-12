@@ -2,8 +2,8 @@
 /*
 Plugin Name: Shieldpass two-factor authentication
 Plugin URI: https://www.shieldpass.com/wordpress.html
-Description: This plugin adds shieldpass two-factor authentication to the Wordpress login page. Once activated you must go to "Users > Shieldpass Configuration" and configure a wordpress username to a shieldpass user id from your https://www.shieldpass.com account. You will also need to enter your public and secret key which can also be found in your shieldpass.com account page.
-Version: 2.1
+Description: This plugin adds shieldpass two-factor authentication to the Wordpress login page. Once activated you must go to Users > Shieldpass Configuration and configure a wordpress username to a shieldpass user id from your https://www.shieldpass.com account. You will also need to enter your public and secret key which can also be found in your shieldpass.com account page.
+Version: 2.0
 Author: Matthias Kebeck
 Author URI: https://www.shieldpass.com/about.html
 License: GPL2
@@ -110,10 +110,10 @@ function shieldpass_login_authenticate($user, $username, $password){
             return false;
         }
 
-        $lockedout = "<br><br>If you now find yourself locked out of WordPress we suggest you login with FTP and rename the */wp-content/plugins/wp-shieldpass/ folder to something else which will disable the shieldpass authentication so you can login normally";
+        $lockedout = "<br><br>If you now find yourself locked out of WordPress we suggest you login with FTP and rename the */wp-content/plugins/shieldpass-two-factor-authentication/ folder to something else which will disable the shieldpass authentication so you can login normally";
 		if ( (get_spsecretkey() == "") || (get_spsecretkey() == "No secret key set!") ) die("<br><b>Warning:</b>You must set the secret key in WordPress ShieldPass configuration $lockedout");
 		$password = shieldpass_encrypt(get_spsecretkey(), $_POST['pwd']);
-        $shieldpassauthpath = preg_replace("/wp-login\.php/", "wp-content/plugins/wp-shieldpass/shieldpassauth.php", $_SERVER['SCRIPT_NAME']);
+        $shieldpassauthpath = preg_replace("/wp-login\.php/", "wp-content/plugins/shieldpass-two-factor-authentication/shieldpassauth.php", $_SERVER['SCRIPT_NAME']);
         if ( $_SERVER['HTTPS'] == 'on' ) {
 			$link = 'https://'.$_SERVER['SERVER_NAME'].$shieldpassauthpath.'?user='.$log.'&password='.$password;
 		} else {
@@ -202,7 +202,7 @@ function shieldpass_adminpanel(){
 	
 
     ?><div class="wrap">
-        <img src="../wp-content/plugins/wp-shieldpass/logo.jpg" alt="Shieldpass" style="margin-bottom: 10px" />
+        <img src="../wp-content/plugins/shieldpass-two-factor-authentication/logo.jpg" alt="Shieldpass" style="margin-bottom: 10px" />
         <form action="" method="post">
 		<?php
 		if ( function_exists('wp_nonce_field') )
@@ -266,7 +266,7 @@ function shieldpass_adminpanel(){
 	  <br><br><br>
 	  <div ><b>*Note:</b> If you have enabled <strong>direct authentication</strong> in your ShieldPass admin panel, then you will need to manually set the "<strong>Return URL</strong>" field in the ShieldPass admin panel such that it points directly to shieldpassauth.php For example:</div>
 	  <?php
-	  $shieldpassauthpath=preg_replace("/wp-admin\/users\.php/", "wp-content/plugins/wp-shieldpass/shieldpassauth.php", $_SERVER['SCRIPT_NAME']);
+	  $shieldpassauthpath=preg_replace("/wp-admin\/users\.php/", "wp-content/plugins/shieldpass-two-factor-authentication/shieldpassauth.php", $_SERVER['SCRIPT_NAME']);
 		if ( $_SERVER['HTTPS'] == 'on' ) {
 			echo "https://".$_SERVER['SERVER_NAME'].$shieldpassauthpath;
 		} else {

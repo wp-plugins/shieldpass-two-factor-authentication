@@ -106,7 +106,7 @@ if ( isset($_POST['shieldpass_user_id']) && isset($_POST['shieldpass_user_respon
     <input type="hidden" name="wpuser" value="<?php echo $user;?>" />
     <input type="hidden" name="wppw" value="<?php echo $password;?>" />
     <?php 
-	$lockedout = "<br><br>If you now find yourself locked out of WordPress we suggest you login with FTP and rename the */wp-content/plugins/wp-shieldpass/ folder to something else which will disable the shieldpass authentication so you can login normally";
+	$lockedout = "<br><br>If you now find yourself locked out of WordPress we suggest you login with FTP and rename the */wp-content/plugins/shieldpass-two-factor-authentication/ folder to something else which will disable the shieldpass authentication so you can login normally";
 	if ( $sppublickey == "" ) die("you must set the public key in WordPress ShieldPass configuration $lockedout");
 	if ( $spsecretkey == "" ) die("you must set the secret key in WordPress ShieldPass configuration $lockedout");
 	if ( $spuid == "" ) die("you must set the user id in WordPress ShieldPass configuration $lockedout");
