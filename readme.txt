@@ -43,9 +43,31 @@ Card costs and subscription are less than $10 and postage anywhere in the world 
 
 == Frequently Asked Questions ==
 
+
+= How do I get started with ShieldPass? =
+
+Before installing the plugin, you'll need to buy a cheap ShieldPass access card at https://www.shieldpass.com
+
 = Where do I configure the shieldpass plugin? =
 
 The ShieldPass configuration panel is found under "Users" on the left hand side of the admin panel. 
+
+= What makes this more secure than mobile sms authentication? =
+
+What makes ShieldPass more secure is its simplicity eliminates the hi-tech attacks used against token and mobile authentication.
+Mobile authentication is vulnerable to malware the same as the computers it is sopposed to protect however there are many other alternative attacks on mobile authentication most commonly used including simply calling the targets telecom provider and requesting all of your calls be forwarded to the hackers mobile. Also GSM encryption is now considered broken with kits available to decrypt sms messages.
+
+= What makes this more secure than OTP token authentication? =
+
+OTP hardware tokens often issued to protect bank accounts as well as USB OTP tokens are also vulnerable to malware performing a man-in-the-middle attack whereby the malware passes the OTP value from the user to their own hidden connection. While not implemented into this plugin version ShieldPass has the ability to perform transaction authentication whereby specific authentication information is passed along with the OTP challenge thereby defeating a MITM attack.
+
+= Could malware analyze the challenges to try to determine the key? =
+
+No, we assume the worst and introduce enough entropy into the visual challenges to make analysis practically impossible for malware.
+
+= WordPress integration is great, but what if I want to protect my own web applications with ShieldPass two-factor? = 
+
+If you're interested in protecting other web applications with ShieldPass's two-factor authentication, simply cut and paste the html code in your client account for easy integration with other web applications.
 
 
 == Screenshots ==
