@@ -1,7 +1,7 @@
 === ShieldPass two-factor authentication ===
 Contributors: shieldpass
 Tags: authentication, security, login
-Requires at least: 2.0.2
+Requires at least: 3
 Tested up to: 3.2.1
 Stable tag: 3.2.1
 
