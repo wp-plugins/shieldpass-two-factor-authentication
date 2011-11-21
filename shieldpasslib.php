@@ -1,9 +1,9 @@
 <?php
 /*    
  * This is a PHP library that handles calling the ShieldPass authentication server.
- * @version		2.0
- * @copyright(c)2011 ShieldPass 
- * @link 		https://shieldpass.com
+ * library version		2.0
+ * copyright(c)2011 ShieldPass 
+ * link 		https://shieldpass.com
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -88,17 +88,17 @@ define("SHIELDPASS_VERIFY_SERVER", "www.shieldpass.com");
  * is embedded within the HTML form it was called from.
  * @param string $publickey A public key for ShieldPass client
  * @param string $secretkey A secret key for ShieldPass client
- * @param string $userid A encrypted identification value for a particular ShieldPass client access card
+ * @param string $cardid A encrypted identification value for a particular ShieldPass client access card
  * @param string $transid Encoded transaction authentication numbers
  * @param boolean $use_ssl(optional, default is true)
  * @return string - The HTML to be embedded in the user's form.
  */
-function shieldpass_get_html($publickey, $secretkey, $userid, $transid, $use_ssl = true) {
+function shieldpass_get_html($publickey, $secretkey, $cardid, $transid, $use_ssl = true) {
 	if ($publickey == null || $publickey == '' || $secretkey == null || $secretkey == '') {
 		die ("To use ShieldPass you must include your public and secret key from your account page");
 	}
-	if ($userid == null || $userid == '') {
-		die ("To use ShieldPass you must reference a userid code from your account page");
+	if ($cardid == null || $cardid == '') {
+		die ("To use ShieldPass you must reference a cardid code from your account page");
 	}
 	if (preg_match('/\D+/D',$transid)) {
 		die ("To use ShieldPass your transaction id numbers must be from 0-9");
@@ -109,12 +109,12 @@ function shieldpass_get_html($publickey, $secretkey, $userid, $transid, $use_ssl
 		$server = SHIELDPASS_API_SERVER;
     }        
 	
-		$crypt_userid_js = shieldpass_encrypt($secretkey, $userid.'|js|'.$transid.'|');
-		$crypt_userid_sp = shieldpass_encrypt($secretkey, $userid.'|sp|'.$transid.'|');
-        return '<script type="text/javascript" src="'.$server.'/challenge?k='.$publickey.'&u='.$crypt_userid_js.'"></script>
+		$crypt_cardid_js = shieldpass_encrypt($secretkey, $cardid.'|js|'.$transid.'|');
+		$crypt_cardid_sp = shieldpass_encrypt($secretkey, $cardid.'|sp|'.$transid.'|');
+        return '<script type="text/javascript" src="'.$server.'/challenge?k='.$publickey.'&u='.$crypt_cardid_js.'"></script>
 
 	<noscript>
-  		<a href="https://www.shieldpass.com/authenticate.html?k='.$publickey.'&u='.$crypt_userid_sp.'"><input name="login" id="login" type="submit" value="direct login"/></a>
+  		<a href="https://www.shieldpass.com/authenticate.html?k='.$publickey.'&u='.$crypt_cardid_sp.'"><input name="login" id="login" type="submit" value="direct login"/></a>
 	</noscript>';
 }
 
@@ -196,17 +196,17 @@ class ShieldPassResponse {
  * Calls an HTTP POST function to verify if the user's response was correct
  * @param string $publickey
  * @param string $secretkey
- * @param string $userid
+ * @param string $cardid
  * @param string $response
  * @param array $extra_params an array of extra variables to post to the server
  * @return ShieldPassResponse
  */
-function shieldpass_check_answer($publickey, $secretkey, $userid, $response, $extra_params = array()) {
+function shieldpass_check_answer($publickey, $secretkey, $cardid, $response, $extra_params = array()) {
 	if ($publickey == null || $publickey == '' || $secretkey == null || $secretkey == '') {
 		die ("To use shieldpass you must get a set of keys from your account page");
 	}
-	if ($userid == null || $userid == '' || preg_match('/[^a-zA-Z0-9_.-]+/D', $userid)) {
-		die ("To use ShieldPass you must use a reference userid code from your account page");
+	if ($cardid == null || $cardid == '' || preg_match('/[^a-zA-Z0-9_.-]+/D', $cardid)) {
+		die ("To use ShieldPass you must use a reference card id code from your account page");
 	}
     if ($response == null || strlen($response) == 0) {
              $shieldpass_response = new ShieldPassResponse();
@@ -215,7 +215,7 @@ function shieldpass_check_answer($publickey, $secretkey, $userid, $response, $ex
              return $shieldpass_response;
     }
 	
-		$crypt_client_response = shieldpass_encrypt($secretkey,$response."|".$userid."|".strtr(serialize($_SERVER),'|','-')."|2.0|PHP|en-US");
+		$crypt_client_response = shieldpass_encrypt($secretkey,$response."|".$cardid."|".strtr(serialize($_SERVER),'|','-')."|2.0|PHP|en-US");
 	if (function_exists('curl_init')) {	
         $server_response = _shieldpass_curl_http_post(SHIELDPASS_VERIFY_SERVER, "/api/verify/index.html",
                                           array(

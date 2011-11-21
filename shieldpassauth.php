@@ -7,9 +7,9 @@ error_reporting(0);
 require_once('../../../wp-config.php');
 require_once('shieldpasslib.php');
 
-if ( isset($_POST['shieldpass_user_id']) && isset($_POST['shieldpass_user_response']) ) {
+if ( isset($_POST['shieldpass_card_id']) && isset($_POST['shieldpass_user_response']) ) {
 
-	$shieldpass_user_id = htmlentities($_POST["shieldpass_user_id"], ENT_QUOTES, 'UTF-8');
+	$shieldpass_card_id = htmlentities($_POST["shieldpass_card_id"], ENT_QUOTES, 'UTF-8');
 	$shieldpass_user_response = htmlentities($_POST['shieldpass_user_response'], ENT_QUOTES, 'UTF-8');
 	
 	if ( ($_POST['wpuser'] == "") || ($_POST['wppw'] == "") ) { // direct authentication from shieldpass.com
@@ -18,7 +18,7 @@ if ( isset($_POST['shieldpass_user_id']) && isset($_POST['shieldpass_user_respon
 		</head>
 		<body>
 		<form action="" method="post" name="form">
-		<input type="hidden" name="shieldpass_user_id" value="<?php echo $shieldpass_user_id;?>" />
+		<input type="hidden" name="shieldpass_card_id" value="<?php echo $shieldpass_card_id;?>" />
 		<input type="hidden" name="shieldpass_user_response" value="<?php echo $shieldpass_user_response;?>" />
 		<input type="hidden" name="direct_authentication" value="yes" />
 		<div align="center" style="font-family:Arial">
@@ -44,7 +44,7 @@ if ( isset($_POST['shieldpass_user_id']) && isset($_POST['shieldpass_user_respon
     </head>
     <body>
     <form action="../../../wp-login.php" method="post" name="form">
-    <input type="hidden" name="shieldpass_user_id" value="<?php echo $shieldpass_user_id;?>" />
+    <input type="hidden" name="shieldpass_card_id" value="<?php echo $shieldpass_card_id;?>" />
     <input type="hidden" name="shieldpass_user_response" value="<?php echo $shieldpass_user_response;?>" />
     <input type="hidden" name="wpuser" value="<?php echo $wpuser;?>" />
     <input type="hidden" name="wppw" value="<?php echo $password; ?>" />
@@ -109,7 +109,7 @@ if ( isset($_POST['shieldpass_user_id']) && isset($_POST['shieldpass_user_respon
 	$lockedout = "<br><br>If you now find yourself locked out of WordPress we suggest you login with FTP and rename the */wp-content/plugins/shieldpass-two-factor-authentication/ folder to something else which will disable the shieldpass authentication so you can login normally";
 	if ( $sppublickey == "" ) die("you must set the public key in WordPress ShieldPass configuration $lockedout");
 	if ( $spsecretkey == "" ) die("you must set the secret key in WordPress ShieldPass configuration $lockedout");
-	if ( $spuid == "" ) die("you must set the user id in WordPress ShieldPass configuration $lockedout");
+	if ( $spuid == "" ) die("you must set the card id in WordPress ShieldPass configuration $lockedout");
 	echo shieldpass_get_html($sppublickey, $spsecretkey, $spuid, $transid);?>
     </form><?php
 }

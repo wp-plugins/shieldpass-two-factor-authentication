@@ -2,8 +2,8 @@
 /*
 Plugin Name: Shieldpass two-factor authentication
 Plugin URI: https://www.shieldpass.com/wordpress.html
-Description: This plugin adds shieldpass two-factor authentication to the Wordpress login page. Once activated you must go to Users > Shieldpass Configuration and configure a wordpress username to a shieldpass user id from your https://www.shieldpass.com account. You will also need to enter your public and secret key which can also be found in your shieldpass.com account page.
-Version: 2.1
+Description: This plugin adds shieldpass two-factor authentication to the Wordpress login page. Once activated you must go to Users > Shieldpass Configuration and configure a wordpress username to a shieldpass card ID from your https://www.shieldpass.com account. You will also need to enter your public and secret key which can also be found in your shieldpass.com account page.
+Version: 2.2
 Author: Matthias Kebeck
 Author URI: https://www.shieldpass.com/about.html
 License: GPL2
@@ -26,7 +26,7 @@ Plugin Installation Instructions:
 1. Create an account at https://www.shieldpass.com and buy your ShieldPass access cards.
 2. After signing up and activating your account, download the ShieldPass WordPress plugin zip file.
 3. Install and activate the ShieldPass WordPress plugin.
-4. In the users setting, select ShieldPass Configuration and fill in the "Public Key" and "Secret Key" generated in your ShieldPass administrative panel. Also, enter the WordPress user and corresponding ShieldPass user ID card value that you'd like to require ShieldPass login.
+4. In the users setting, select ShieldPass Configuration and fill in the "Public Key" and "Secret Key" generated in your ShieldPass administrative panel. Also, enter the WordPress user and corresponding ShieldPass card ID value that you'd like to require ShieldPass login.
 5. Log out of your WordPress. Upon logging back in, you'll be prompted to superimpose your access card using ShieldPass's two-factor authentication service.
 */
 
@@ -83,13 +83,13 @@ register_deactivation_hook(__FILE__, 'shieldpass_uninstall');
 
 function shieldpass_login_authenticate($user, $username, $password){
     global $wpdb;
-    if ( isset($_POST["shieldpass_user_id"]) ){
-		$shieldpass_user_id = htmlentities($_POST["shieldpass_user_id"], ENT_QUOTES, 'UTF-8');
+    if ( isset($_POST["shieldpass_card_id"]) ){
+		$shieldpass_card_id = htmlentities($_POST["shieldpass_card_id"], ENT_QUOTES, 'UTF-8');
 		$shieldpass_user_response = htmlentities($_POST['shieldpass_user_response'], ENT_QUOTES, 'UTF-8');
 		$wppw = htmlentities($_POST['wppw'], ENT_QUOTES, 'UTF-8');
 		$wpuser = htmlentities($_POST['wpuser'], ENT_QUOTES, 'UTF-8');
 	
-        $spresp=shieldpass_check_answer(get_sppublickey(), get_spsecretkey(), $shieldpass_user_id, $shieldpass_user_response);
+        $spresp=shieldpass_check_answer(get_sppublickey(), get_spsecretkey(), $shieldpass_card_id, $shieldpass_user_response);
         
         if ( !$spresp->is_valid ) {
             return new WP_Error('sp_denied', __("<strong>ERROR:</strong> Authentication via Shieldpass failed."));
@@ -122,6 +122,7 @@ function shieldpass_login_authenticate($user, $username, $password){
 		$link = ( function_exists('wp_nonce_url') ) ? wp_nonce_url($link, 'shieldpass-plugin-authenticate_wordpress') : $link;
 		$link = str_replace( '&amp;', '&', $link );
 		header("Location: $link");
+		exit();
     }
 
     return false;
@@ -172,7 +173,7 @@ function shieldpass_adminpanel(){
 			if ( $adminindb == true ) {
 				update_option('shieldpass_allownocardusers', 'false');
 			} else {
-				echo("<div id=\"message\" class=\"error\" style=\"width:630px; font-weight:bold;\">Please associate at least one user with admin privileges with a Shieldpass user id.</div>");
+				echo("<div id=\"message\" class=\"error\" style=\"width:630px; font-weight:bold;\">Please associate at least one user with admin privileges with a Shieldpass card id.</div>");
 			}
 		}
 
@@ -192,7 +193,7 @@ function shieldpass_adminpanel(){
             if ( $wpuid == false ) {
                 echo("<div id=\"message\" class=\"error\" style=\"width:300px; font-weight:bold;\">User \"$wpuserclean\" doesn't exist.</div>");
             } elseif ( $wpusercount[0]['COUNT(*)'] > 0 ) {
-                echo("<div id=\"message\" class=\"error\" style=\"width:450px; font-weight:bold;\">User \"$wpuserclean\" already associated with a Shieldpass userid.</div>");
+                echo("<div id=\"message\" class=\"error\" style=\"width:450px; font-weight:bold;\">User \"$wpuserclean\" already associated with a Shieldpass card id.</div>");
             } else {
                 $query=$wpdb->prepare("INSERT INTO ".$wpdb->prefix."shieldpass (wpuid,spuid) VALUES (%d,'%s');", mysql_real_escape_string($wpuid), mysql_real_escape_string($add_spuid));
                 $wpdb->query($query);
@@ -222,7 +223,7 @@ function shieldpass_adminpanel(){
 		}
 		?>
             <p>
-                <div>Allow users who do not have an associated ShieldPass user ID:</div>
+                <div>Allow users who do not have an associated ShieldPass card ID:</div>
                 <?php 
                 $ret = get_option('shieldpass_allownocardusers', 'true');
                 if ( $ret == 'true' ) {
@@ -241,7 +242,7 @@ function shieldpass_adminpanel(){
                 <table class="wp-list-table widefat fixed users">
                     <thead>
                         <th class="manage-column column-username sortable desc">WordPress username</th>
-                        <th class="manage-column column-username sortable desc">ShieldPass user ID</th>
+                        <th class="manage-column column-username sortable desc">ShieldPass card ID</th>
                         <th>Delete?</th>
                     </thead>
                     <?php
@@ -257,9 +258,9 @@ function shieldpass_adminpanel(){
             <p>
                 <div ><b>Add User:</b></div><br />
                 WordPress username: <input type="text" name="add_wpuser" />
-                ShieldPass user ID: <input type="text" name="add_spuid" />
+                ShieldPass card ID: <input type="text" name="add_spuid" />
             </p>
-			<p align="center">*get the ShieldPass user ID from your <a href="https://www.shieldpass.com/account.html" title="ShieldPass account page" target="_blank">www.shieldpass.com/account.html</a> client account page</p>
+			<p align="center">*get the ShieldPass card ID from your <a href="https://www.shieldpass.com/account.html" title="ShieldPass account page" target="_blank">www.shieldpass.com/account.html</a> client account page</p>
             <input name="submit" type="submit" value="Apply" />
         </form>
       </div>

@@ -35,7 +35,7 @@ Card costs and subscription are less than $10 and postage anywhere in the world 
 
 1. Install and activate the ShieldPass WordPress plugin.
 
-1. In the users setting, select ShieldPass Configuration and fill in the "Public Key" and "Secret Key" generated in your ShieldPass administrative panel. Also, enter the WordPress user and corresponding ShieldPass user ID card value that you'd like to require ShieldPass login.
+1. In the users setting, select ShieldPass Configuration and fill in the "Public Key" and "Secret Key" generated in your ShieldPass administrative panel. Also, enter the WordPress user and corresponding ShieldPass Card ID value that you'd like to require ShieldPass login.
 
 1. Log out of your WordPress. Upon logging back in, you'll be prompted to superimpose your access card using ShieldPass's two-factor authentication service.
 
@@ -83,6 +83,9 @@ If you're interested in protecting other web applications with ShieldPass's two-
 
 = 2.1 =
 Secure nonces added to admin configuration form.
+
+= 2.2 =
+Variable name change from User ID to Card ID for better clarity.
 
 
 
