@@ -111,10 +111,10 @@ function shieldpass_get_html($publickey, $secretkey, $cardid, $transid, $use_ssl
 	
 		$crypt_cardid_js = shieldpass_encrypt($secretkey, $cardid.'|js|'.$transid.'|');
 		$crypt_cardid_sp = shieldpass_encrypt($secretkey, $cardid.'|sp|'.$transid.'|');
-        return '<script type="text/javascript" src="'.$server.'/challenge?k='.$publickey.'&u='.$crypt_cardid_js.'"></script>
+        return '<script type="text/javascript" src="'.$server.'/challenge?k='.$publickey.'&c='.$crypt_cardid_js.'"></script>
 
 	<noscript>
-  		<a href="https://www.shieldpass.com/authenticate.html?k='.$publickey.'&u='.$crypt_cardid_sp.'"><input name="login" id="login" type="submit" value="direct login"/></a>
+  		<a href="https://www.shieldpass.com/authenticate.html?k='.$publickey.'&c='.$crypt_cardid_sp.'"><input name="login" id="login" type="submit" value="direct login"/></a>
 	</noscript>';
 }
 
